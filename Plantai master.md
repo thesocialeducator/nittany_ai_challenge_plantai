@@ -65,7 +65,7 @@ compiled-plantai/
 | State | Zustand |
 | Backend | FastAPI (Python 3.11) |
 | Backend Deploy | **Render.com** (free tier, 750 hrs/mo) |
-| AI Generation | NVIDIA Build — `qwen/qwen3.5-122b-a10b` (free endpoint) |
+| AI Generation | NVIDIA Build — `meta/llama-3.3-70b-instruct` (free endpoint) |
 | AI Embeddings | NVIDIA NemoRetriever — `nvidia/llama-3_2-nemoretriever-300m-embed-v1` (free) |
 | Frontend Deploy | Cloudflare Pages (free, 500 builds/mo) |
 | Database | Cloudflare D1 — SQLite (free, 5M row reads/day) |
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS analyses (
 
 1. Rewrite `main.py` from scratch:
    - Remove all google-genai imports
-   - Add `call_nvidia()` async via httpx → `https://integrate.api.nvidia.com/v1/chat/completions`, model `qwen/qwen3.5-122b-a10b`
+   - Add `call_nvidia()` async via httpx → `https://integrate.api.nvidia.com/v1/chat/completions`, model `meta/llama-3.3-70b-instruct`
    - Add `fetch_usda_soil()` — real USDA SDA spatial WFS query by lat/lng
    - Add `fetch_nasa_ndvi()` — NASA MODIS ORNL endpoint with Earthdata auth (see snippet below)
    - Add `_soil_fallback()` — deterministic coordinate-based fallback

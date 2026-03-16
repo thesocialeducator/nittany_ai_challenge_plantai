@@ -44,7 +44,7 @@ async def call_nvidia(prompt: str, system: str = "You are a helpful AI assistant
                 "Content-Type": "application/json",
             },
             json={
-                "model": "qwen/qwen3.5-122b-a10b",
+                "model": "meta/llama-3.3-70b-instruct",
                 "messages": [
                     {"role": "system", "content": system},
                     {"role": "user",   "content": prompt},
