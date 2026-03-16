@@ -184,12 +184,12 @@ interface AppState {
 }
 
 const defaultLoadingSteps: LoadingStep[] = [
-    { label: 'Location identified', sublabel: '', status: 'pending' },
-    { label: 'Soil composition', sublabel: 'USDA database', status: 'pending' },
-    { label: 'Climate history', sublabel: '30-year normals', status: 'pending' },
-    { label: 'Vegetation health', sublabel: 'Sentinel-2 satellite', status: 'pending' },
-    { label: 'Crop compatibility matrix', sublabel: '', status: 'pending' },
-    { label: 'Economic projections', sublabel: '', status: 'pending' },
+    { label: 'Location identified',  sublabel: 'OpenStreetMap Nominatim',   status: 'pending' },
+    { label: 'Soil composition',     sublabel: 'USDA SSURGO database',       status: 'pending' },
+    { label: 'Climate history',      sublabel: 'Open-Meteo 30-year normals', status: 'pending' },
+    { label: 'Vegetation health',    sublabel: 'NASA MODIS satellite',        status: 'pending' },
+    { label: 'Crop compatibility',   sublabel: 'USDA NASS benchmarks',        status: 'pending' },
+    { label: 'Economic projections', sublabel: 'USDA ERS models',             status: 'pending' },
 ];
 
 const defaultAnalysis: AnalysisData = {

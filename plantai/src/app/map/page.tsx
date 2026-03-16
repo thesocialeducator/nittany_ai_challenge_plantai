@@ -4,7 +4,8 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/lib/store';
-import { fetchAnalysis, mapBackendToAnalysis } from '@/lib/apiClient';
+import { fetchAnalysis, mapBackendToAnalysis, generateEconomicsFromCropScores, fetchSaveAnalysis } from '@/lib/apiClient';
+import { scoreCrops } from '@/lib/analysis/cropScorer';
 import dynamic from 'next/dynamic';
 
 const MapCanvas = dynamic(() => import('@/components/map/MapCanvas'), { ssr: false });
@@ -39,8 +40,6 @@ export default function MapPage() {
         setSidebarData({ acreage });
         setIsAnalyzing(true);
 
-        const analysisId = Date.now().toString(36);
-
         // Extract [lng, lat] coordinate pairs from GeoJSON polygon ring
         const coordinates = (polygon.geometry as GeoJSON.Polygon).coordinates[0] as [number, number][];
 
@@ -66,7 +65,38 @@ export default function MapPage() {
             [0, 1, 2, 3, 4, 5].forEach(i => updateLoadingStep(i, 'done'));
 
             // Transform backend response → AnalysisData for the store
-            const analysisData = mapBackendToAnalysis(backendData, acreage, analysisId);
+            const localId = Date.now().toString(36);
+            const analysisData = mapBackendToAnalysis(backendData, acreage, localId);
+
+            // Override crop matrix + economics with real frontend scores
+            if (analysisData.soilData && analysisData.climateData) {
+                const realCrops = scoreCrops(analysisData.soilData, analysisData.climateData);
+                analysisData.cropMatrix = realCrops;
+                analysisData.economics  = generateEconomicsFromCropScores(realCrops, acreage);
+            }
+
+            // Save to D1 and get a persistent UUID; fall back to local ID on error
+            let analysisId = localId;
+            try {
+                analysisId = await fetchSaveAnalysis({
+                    address:          address?.displayName ?? '',
+                    lat:              centroid.lat,
+                    lng:              centroid.lng,
+                    acreage,
+                    polygon_geojson:  JSON.stringify(polygon),
+                    soil_data:        analysisData.soilData ?? null,
+                    climate_data:     analysisData.climateData ?? null,
+                    ndvi_value:       analysisData.ndviValue ?? null,
+                    crop_matrix:      analysisData.cropMatrix,
+                    economics:        analysisData.economics ?? null,
+                    dashboard_config: null,
+                });
+            } catch (saveErr) {
+                console.warn('D1 save failed, using local id:', saveErr);
+            }
+
+            // Stamp the persistent ID onto the store analysis
+            analysisData.id = analysisId;
             setAnalysis(analysisData);
 
             // Populate sidebar from mapped data

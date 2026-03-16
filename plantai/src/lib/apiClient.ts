@@ -42,8 +42,7 @@ export interface AnalyzeResponse {
     weather_forecast: WeatherDaily;
     weather_historical: WeatherDaily;
     soil_data: BackendSoilData;
-    nws_alerts: NWSAlert[];
-    sentinel_satellite_data: SentinelData;
+    ndvi: number;
     crop_matrix: BackendCropEntry[];
     economic_projections: BackendEconomics;
 }
@@ -63,18 +62,10 @@ interface BackendSoilData {
     drainage: string;
     ph_range: [number, number];
     organic_matter_pct: number;
-}
-
-interface NWSAlert {
-    event: string;
-    severity: string;
-    description: string;
-}
-
-interface SentinelData {
-    mean_ndvi: number;
-    cloud_cover: string;
-    date_acquired: string;
+    sand: number;
+    silt: number;
+    clay: number;
+    awc: number;
 }
 
 interface BackendCropEntry {
@@ -133,6 +124,73 @@ export async function fetchRecommendations(
     return data;
 }
 
+// ─── Dashboard config ─────────────────────────────────────────────────────────
+
+export interface DashboardConfig {
+    property_summary: string;
+    urgent_flags: string[];
+    tab_order: string[];
+    hero_metric: string;
+    top_insight: string;
+}
+
+export async function fetchDashboardConfig(params: {
+    soil_data:    SoilData | null;
+    climate_data: ClimateData | null;
+    ndvi_value:   number | null;
+    crop_matrix:  CropScore[];
+    area_acres:   number;
+    location:     string;
+}): Promise<DashboardConfig> {
+    const { data } = await axios.post<DashboardConfig>(`${BASE_URL}/api/generate-dashboard`, {
+        ...params,
+        crop_matrix: params.crop_matrix.slice(0, 5),
+    });
+    return data;
+}
+
+// ─── Save / Retrieve analysis (D1) ────────────────────────────────────────────
+
+export interface SaveAnalysisPayload {
+    address: string;
+    lat: number;
+    lng: number;
+    acreage: number;
+    polygon_geojson?: string;
+    soil_data?: SoilData | null;
+    climate_data?: ClimateData | null;
+    ndvi_value?: number | null;
+    crop_matrix: CropScore[];
+    economics?: EconomicScenario[] | null;
+    dashboard_config?: DashboardConfig | null;
+}
+
+export async function fetchSaveAnalysis(payload: SaveAnalysisPayload): Promise<string> {
+    const { data } = await axios.post<{ id: string }>(`${BASE_URL}/api/save-analysis`, payload);
+    return data.id;
+}
+
+export interface StoredAnalysis {
+    id: string;
+    created_at: string;
+    address: string;
+    lat: number;
+    lng: number;
+    acreage: number;
+    polygon_geojson?: string;
+    soil_data?: SoilData;
+    climate_data?: ClimateData;
+    ndvi_value?: number;
+    crop_matrix: CropScore[];
+    economics?: EconomicScenario[];
+    dashboard_config?: DashboardConfig;
+}
+
+export async function fetchStoredAnalysis(id: string): Promise<StoredAnalysis> {
+    const { data } = await axios.get<StoredAnalysis>(`${BASE_URL}/api/get-analysis/${id}`);
+    return data;
+}
+
 // ─── Main transformation function ─────────────────────────────────────────────
 
 export function mapBackendToAnalysis(
@@ -146,9 +204,9 @@ export function mapBackendToAnalysis(
         climateData:   mapClimateData(backend.weather_historical),
         cropMatrix:    mapCropMatrix(backend.crop_matrix, acreage),
         economics:     mapEconomics(backend.economic_projections, backend.crop_matrix, acreage),
-        ndviValue:     backend.sentinel_satellite_data.mean_ndvi,
+        ndviValue:     backend.ndvi,
         elevation:     null,  // /analyze does not return elevation
-        weatherAlerts: backend.nws_alerts.map(a => `${a.event} (${a.severity}): ${a.description}`),
+        weatherAlerts: [],
         droughtStatus: null,
     };
 }
@@ -162,12 +220,11 @@ function mapSoilData(raw: BackendSoilData): SoilData {
         ph:            Math.round(ph * 10) / 10,
         organicMatter: raw.organic_matter_pct,
         drainage:      raw.drainage,
-        // Backend does not expose texture fractions — use agronomic midpoint defaults
-        sand:  40,
-        silt:  35,
-        clay:  25,
-        awc:   0.18,
-        description: raw.taxonomy,
+        sand:          raw.sand,
+        silt:          raw.silt,
+        clay:          raw.clay,
+        awc:           raw.awc,
+        description:   raw.taxonomy,
     };
 }
 
@@ -313,6 +370,32 @@ function mapCropMatrix(crops: BackendCropEntry[], acreage: number): CropScore[] 
                 rotationTips:    [],
             };
         });
+}
+
+export function generateEconomicsFromCropScores(
+    crops: CropScore[],
+    acreage: number
+): EconomicScenario[] {
+    if (!crops.length) return [];
+    const topCrops = crops.slice(0, 4);
+    const baseTotal = crops[0].projectedRevenue * acreage;
+    const totalScore = topCrops.reduce((s, c) => s + c.score, 0) || 1;
+
+    const scenarios = [
+        { name: 'Max Yield',       description: 'Intensive farming maximizing output.',         multiplier: 1.2, roi: 22, breakEvenMonths: 18, laborReduction: 0  },
+        { name: 'Low Maintenance', description: 'Minimal intervention, lower cost.',             multiplier: 0.7, roi: 14, breakEvenMonths: 24, laborReduction: 20 },
+        { name: 'Pest Resistant',  description: 'Focus on robust varieties, moderate output.',   multiplier: 0.9, roi: 18, breakEvenMonths: 20, laborReduction: 10 },
+    ];
+
+    return scenarios.map(({ name, description, multiplier, roi, breakEvenMonths, laborReduction }) => {
+        const totalRevenue = Math.round(baseTotal * multiplier);
+        const cropList = topCrops.map(c => ({
+            name:    c.name,
+            revenue: Math.round(totalRevenue * c.score / totalScore),
+            acres:   Math.round((c.score / totalScore) * acreage * 10) / 10,
+        }));
+        return { name, description, totalRevenue, laborReduction, crops: cropList, breakEvenMonths, roi };
+    });
 }
 
 function mapEconomics(

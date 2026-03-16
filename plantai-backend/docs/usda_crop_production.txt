@@ -1,0 +1,25 @@
+USDA Crop Production Best Practices for Mid-Atlantic Small Farms
+
+The mid-Atlantic region — encompassing Pennsylvania, Maryland, Virginia, Delaware, and New Jersey — offers diverse agricultural conditions ideal for a wide range of crops. Small farm operators in this region typically manage between 1 and 50 acres and benefit from rich glacial soils, moderate rainfall averaging 40–50 inches annually, and a growing season of 150–200 days depending on elevation and proximity to the coast.
+
+Soil Preparation and Fertility Management
+
+Before planting, all small farm operators should conduct a comprehensive soil test through their county extension office or a certified lab. In Pennsylvania, Penn State Extension offers testing for $9–$20 per sample. Target pH of 6.0–6.8 for most vegetable crops. Apply ground agricultural limestone at 1–2 tons per acre if pH is below 6.0. Incorporate composted manure or finished compost at 2–4 tons per acre in fall to improve tilth and organic matter. Organic matter above 3% significantly improves water-holding capacity, reduces erosion, and supports beneficial microbial populations.
+
+Nitrogen management is critical. For leafy vegetables, apply 100–150 lbs N/acre in split applications. For corn, apply 120–150 lbs N/acre total, with 30% pre-plant and 70% side-dressed at V6 stage. Phosphorus and potassium applications should be based on soil test results; avoid excess phosphorus, which contributes to watershed runoff in the Chesapeake Bay region.
+
+Cover Cropping and Rotation
+
+Cover crops are essential for small mid-Atlantic farms. Plant winter rye at 90–120 lbs/acre after fall harvest. Crimson clover at 15–20 lbs/acre fixes 80–120 lbs N/acre when terminated properly. Austrian winter peas provide excellent biomass. Terminate cover crops 2–3 weeks before spring planting to allow decomposition. Rotate vegetable families every 3–4 years: brassicas → legumes → alliums → solanaceae. This rotation breaks disease cycles and reduces pest pressure by 30–50%.
+
+Water and Irrigation Management
+
+Most mid-Atlantic crops require 1–1.5 inches of water per week during peak growth. Drip irrigation is most efficient, with 85–90% application efficiency. Overhead irrigation can be used but increases disease pressure from foliar diseases like late blight. Mulching with straw at 2–3 inches reduces soil moisture loss by 40% and suppresses weed emergence. Monitor soil moisture weekly using tensiometers or soil moisture sensors; irrigate when soil tension exceeds 20–30 centibars in the top 12 inches.
+
+Yield Benchmarks for Mid-Atlantic Small Farms
+
+Tomatoes: 15,000–25,000 lbs/acre (fresh market). Sweet corn: 200–300 dozen ears/acre. Bell peppers: 8,000–14,000 lbs/acre. Lettuce: 8,000–12,000 lbs/acre (3–4 cuts). Potatoes: 250–350 cwt/acre. Soybeans: 40–55 bu/acre. Winter wheat: 65–85 bu/acre. These benchmarks assume good soil management, timely pest control, and adequate irrigation.
+
+Economic Planning
+
+Small farm operators should plan for input costs of $1,500–$3,500/acre depending on crop and production system. Direct marketing to farmers markets and CSAs typically returns $0.50–$2.00 more per pound than wholesale. Enterprise budgets are available free from Penn State Extension and USDA-ERS for all major mid-Atlantic crops.

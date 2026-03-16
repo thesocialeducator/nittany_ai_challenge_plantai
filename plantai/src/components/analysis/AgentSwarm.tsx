@@ -321,7 +321,7 @@ export default function AgentSwarm() {
                 <div>
                     <div className="flex items-center gap-3 mb-1">
                         <h2 className="text-xl" style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text-primary)', letterSpacing: '-0.01em' }}>
-                            AUTONOMOUS AGENT SWARM
+                            GRANT AUTOPILOT
                         </h2>
                         <div className="flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-medium"
                             style={{
@@ -335,7 +335,7 @@ export default function AgentSwarm() {
                         </div>
                     </div>
                     <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                        3-agent sequential pipeline · Gemini 2.5 Flash · gemini-2.5-flash
+                        3-agent pipeline that analyzes your soil, sources amendments, and drafts your USDA grant application
                     </p>
                 </div>
 

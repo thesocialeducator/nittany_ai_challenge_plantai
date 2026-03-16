@@ -13,6 +13,7 @@ plantai-backend/__pycache__/
 plantai-backend/*.pyc
 plantai-backend/.env
 plantai-backend/instance/
+plantai-backend/vector_store.json
 
 # General
 .DS_Store

@@ -1,0 +1,62 @@
+Common Pests and Diseases for Pennsylvania Vegetable Crops: Tomatoes, Corn, Peppers, Beans, and Squash
+
+Pennsylvania's humid continental climate creates favorable conditions for a wide range of agricultural pests and diseases. Effective integrated pest management (IPM) begins with identification, economic thresholds, and cultural controls before resorting to pesticide applications.
+
+TOMATOES
+
+Pests:
+Tomato hornworm (Manduca quinquemaculata): Large green caterpillars (3–4 inches) with white diagonal stripes and a rear horn. Feed voraciously on foliage and fruit. Hand-pick when populations are low. Parasitic wasps (Cotesia congregatus) are effective biological control — do not kill hornworms with white egg sacs attached, as parasitic wasps have already attacked them. Bt (Bacillus thuringiensis) is effective when caterpillars are small.
+Aphids (multiple species): Cluster on undersides of leaves and new growth. Vector viruses including tomato mosaic virus. Knock off with water stream. Introduce ladybugs or lacewings. Insecticidal soap (1–2% solution) effective for heavy infestations.
+Tomato fruitworm (Helicoverpa zea): Enters fruit at stem end. Destroy infested fruit. Spinosad or Bt applied when moths are active.
+
+Diseases:
+Late blight (Phytophthora infestans): Most destructive tomato disease in Pennsylvania. Water-soaked lesions on leaves, white powdery growth on undersides in high humidity, rapid collapse of vines. Favored by cool nights (50–65°F), warm humid days, and leaf wetness. Plant resistant varieties (Mountain Merit, Defiant PHR, Jasper). Apply copper fungicide or chlorothalonil preventatively. Scout weekly starting July 1.
+Early blight (Alternaria solani): Brown target-spot lesions on lower leaves; progresses upward. Maintain good air circulation, avoid overhead irrigation, remove infected foliage. Apply mancozeb or chlorothalonil at 7–10 day intervals under wet conditions.
+Fusarium wilt: Yellowing and wilting of one side of plant, brown vascular tissue when stem is cut. No cure — remove and destroy affected plants. Plant resistant varieties (labeled "F" on seed packets). Crop rotate 3–4 years.
+
+SWEET CORN
+
+Pests:
+Corn earworm (Helicoverpa zea): Primary pest of sweet corn. Larvae enter silks and feed on developing kernels at ear tip. Monitor with pheromone traps; apply Bt or spinosad to silks every 3–5 days when trap captures exceed 5 moths/night during silking. Mineral oil (1 mL) applied to silk 3–5 days after silk emergence disrupts larval access.
+European corn borer (Ostrinia nubilalis): Two generations in Pennsylvania. First-generation larvae bore into stalks (June–July), second into ears (August). Pheromone trap monitoring critical. Bt applied at egg hatch (first instar) is highly effective.
+Japanese beetle (Popillia japonica): Adults feed on corn silks, reducing pollination and kernel set. Hand-pick adults from silks during morning hours when sluggish.
+
+Diseases:
+Northern corn leaf blight (Exserohilum turcicum): Long, cigar-shaped gray-green lesions on leaves. Plant resistant hybrids. Fungicide (azoxystrobin or pyraclostrobin) application at VT/R1 stage economically justified when disease present before tasseling.
+Common smut (Ustilago maydis): Gray-silver galls on ears, tassels, and stalks that rupture to release black spores. No effective chemical control. Remove and destroy galls before they rupture. Plant resistant hybrids.
+
+BELL PEPPERS
+
+Pests:
+Pepper weevil (Anthonomus eugenii): Adults lay eggs in flower buds and small fruit; larvae destroy seeds and cause fruit drop. Monitor with yellow sticky traps. Spinosad or permethrin when threshold reached.
+European corn borer: Also infests pepper stems in second generation. Same management as in corn.
+Aphids: As with tomatoes — insecticidal soap and biological controls.
+
+Diseases:
+Phytophthora blight (Phytophthora capsici): Crown and root rot, foliar blight, fruit rot. Most serious pepper disease in Pennsylvania's wet summers. Avoid planting in poorly drained soils. Raised beds critical. Rotate to non-susceptible crops for 3+ years. Apply mefenoxam (Ridomil) preventatively in high-risk situations.
+Bacterial leaf spot (Xanthomonas campestris): Water-soaked lesions turning brown with yellow halos. Avoid overhead irrigation. Copper bactericide at 7–10 day intervals during wet weather.
+
+GREEN BEANS
+
+Pests:
+Mexican bean beetle (Epilachna varivestis): Copper-colored beetle resembling ladybug; spiny yellow larvae skeletonize leaf undersides. Early plantings often escape worst damage. Neem oil or pyrethrin when larvae present.
+Bean leaf beetle: Feeds on leaves and pods. Plant early to avoid peak populations. Pyrethrin or spinosad for heavy infestations.
+
+Diseases:
+White mold (Sclerotinia sclerotiorum): Cottony white fungal growth on stems and pods in cool, wet conditions. Improve air circulation through plant spacing. Fungicide (iprodione or thiophanate-methyl) at early bloom.
+Bean common mosaic virus: Spread by aphids. Plant resistant varieties. Control aphids to reduce spread.
+
+SQUASH AND ZUCCHINI
+
+Pests:
+Squash vine borer (Melittia cucurbitae): Larvae bore into base of stems; plants wilt suddenly. Wrap base of stems in aluminum foil to deter egg laying. Apply Bt or spinosad to base of plant weekly when adult moths (clear-winged, red and black) are active (late June–July).
+Cucumber beetles (striped and spotted): Feed on foliage and spread bacterial wilt. Row covers from transplant until flowering provide protection. Remove covers at flowering for pollination. Kaolin clay as deterrent. Pyrethrin if threshold exceeded.
+Squash bug (Anasa tristis): Gray-brown bugs cluster on undersides of leaves. Egg masses orange-bronze, in neat rows on leaf undersides. Hand-pick eggs. Neem oil or pyrethrin on nymphs. Remove plant debris after harvest.
+
+Diseases:
+Powdery mildew (Podosphaera xanthii): White powdery coating on leaves. Very common in Pennsylvania by late July. Reduce nitrogen, improve air circulation. Resistant varieties best. Potassium bicarbonate or sulfur fungicide effective early.
+Downy mildew: Angular yellow lesions on upper leaf surface, purplish sporulation below. Favored by cool nights and leaf wetness. Apply copper or chlorothalonil preventatively.
+
+General IPM Principles for Pennsylvania Vegetable Farms
+
+Scout crops weekly. Use economic thresholds — not all pest presence requires treatment. Prioritize biological controls, cultural practices (rotation, sanitation, resistant varieties), and physical barriers. Reserve synthetic pesticides for threshold-exceeding situations. Maintain records of all scouting observations and pesticide applications as required for most USDA conservation program compliance.
