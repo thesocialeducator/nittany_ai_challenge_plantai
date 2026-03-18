@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/lib/store';
 import { fetchAnalysis, mapBackendToAnalysis, generateEconomicsFromCropScores, fetchSaveAnalysis } from '@/lib/apiClient';
 import { scoreCrops } from '@/lib/analysis/cropScorer';
+import { getUserId } from '@/lib/identity';
 import dynamic from 'next/dynamic';
 
 const MapCanvas = dynamic(() => import('@/components/map/MapCanvas'), { ssr: false });
@@ -90,6 +91,7 @@ export default function MapPage() {
                     crop_matrix:      analysisData.cropMatrix,
                     economics:        analysisData.economics ?? null,
                     dashboard_config: null,
+                    user_id:          getUserId() ?? undefined,
                 });
             } catch (saveErr) {
                 console.warn('D1 save failed, using local id:', saveErr);

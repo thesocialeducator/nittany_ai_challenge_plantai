@@ -163,6 +163,7 @@ export interface SaveAnalysisPayload {
     crop_matrix: CropScore[];
     economics?: EconomicScenario[] | null;
     dashboard_config?: DashboardConfig | null;
+    user_id?: string;
 }
 
 export async function fetchSaveAnalysis(payload: SaveAnalysisPayload): Promise<string> {
@@ -188,6 +189,23 @@ export interface StoredAnalysis {
 
 export async function fetchStoredAnalysis(id: string): Promise<StoredAnalysis> {
     const { data } = await axios.get<StoredAnalysis>(`${BASE_URL}/api/get-analysis/${id}`);
+    return data;
+}
+
+// ─── Returning user analyses ──────────────────────────────────────────────────
+
+export interface AnalysisSummary {
+    id: string;
+    address: string;
+    acreage: number;
+    created_at: string;
+    soil_ph: number | null;
+    top_crop: string | null;
+    ndvi_value: number | null;
+}
+
+export async function fetchMyAnalyses(userId: string): Promise<AnalysisSummary[]> {
+    const { data } = await axios.get<AnalysisSummary[]>(`${BASE_URL}/api/my-analyses/${userId}`);
     return data;
 }
 

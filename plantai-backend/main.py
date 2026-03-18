@@ -5,6 +5,7 @@ import math
 import uuid
 import asyncio
 import random
+from contextlib import asynccontextmanager
 from datetime import datetime
 from typing import Any, List, Optional
 
@@ -258,7 +259,19 @@ async def fetch_nasa_ndvi(lat: float, lng: float) -> float:
 
 # ── FastAPI app ───────────────────────────────────────────────────────────────
 
-app = FastAPI(title="Farm.ai Backend")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Idempotent migration: add user_id column to D1 tables
+    for table in ("properties", "analyses"):
+        try:
+            await d1_query(f"ALTER TABLE {table} ADD COLUMN user_id TEXT")
+            print(f"[Migration] Added user_id to {table}")
+        except Exception as e:
+            if "duplicate column" not in str(e).lower():
+                print(f"[Migration] Warning on {table}: {e}")
+    yield
+
+app = FastAPI(title="Farm.ai Backend", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -329,6 +342,7 @@ class SaveAnalysisRequest(BaseModel):
     crop_matrix: List[dict] = []
     economics: Optional[dict] = None
     dashboard_config: Optional[dict] = None
+    user_id: Optional[str] = None
 
 # ── Health ────────────────────────────────────────────────────────────────────
 
@@ -588,16 +602,16 @@ async def save_analysis(request: SaveAnalysisRequest):
 
     try:
         await d1_query(
-            """INSERT INTO properties (id, created_at, address, lat, lng, acreage, polygon_geojson)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            """INSERT INTO properties (id, created_at, address, lat, lng, acreage, polygon_geojson, user_id)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             [property_id, now, request.address, request.lat, request.lng,
-             request.acreage, request.polygon_geojson],
+             request.acreage, request.polygon_geojson, request.user_id],
         )
         await d1_query(
             """INSERT INTO analyses
                (id, property_id, created_at, soil_data, climate_data, ndvi_value,
-                crop_matrix, economics, dashboard_config)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                crop_matrix, economics, dashboard_config, user_id)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             [
                 analysis_id,
                 property_id,
@@ -608,6 +622,7 @@ async def save_analysis(request: SaveAnalysisRequest):
                 json.dumps(request.crop_matrix),
                 json.dumps(request.economics) if request.economics else None,
                 json.dumps(request.dashboard_config) if request.dashboard_config else None,
+                request.user_id,
             ],
         )
     except Exception as e:
@@ -664,6 +679,62 @@ async def get_analysis(analysis_id: str):
         "economics":        _parse(row.get("economics")),
         "dashboard_config": _parse(row.get("dashboard_config")),
     }
+
+
+# ── My Analyses (returning user) ─────────────────────────────────────────────
+
+@app.get("/api/my-analyses/{user_id}")
+async def my_analyses(user_id: str):
+    """Return recent analyses for an anonymous user, ordered newest first."""
+    try:
+        rows = await d1_query(
+            """SELECT a.id, a.created_at, a.ndvi_value,
+                      a.soil_data, a.crop_matrix,
+                      p.address, p.acreage
+               FROM analyses a
+               JOIN properties p ON a.property_id = p.id
+               WHERE a.user_id = ?
+               ORDER BY a.created_at DESC
+               LIMIT 10""",
+            [user_id],
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"D1 query error: {str(e)}")
+
+    results = []
+    for row in rows:
+        # Extract soil_ph from JSON soil_data
+        soil_ph = None
+        try:
+            sd = json.loads(row.get("soil_data") or "{}")
+            ph_range = sd.get("ph_range") or sd.get("ph")
+            if isinstance(ph_range, list) and len(ph_range) == 2:
+                soil_ph = round((ph_range[0] + ph_range[1]) / 2, 1)
+            elif isinstance(ph_range, (int, float)):
+                soil_ph = round(float(ph_range), 1)
+        except Exception:
+            pass
+
+        # Extract top_crop from JSON crop_matrix
+        top_crop = None
+        try:
+            cm = json.loads(row.get("crop_matrix") or "[]")
+            if cm:
+                top_crop = cm[0].get("name") or cm[0].get("crop")
+        except Exception:
+            pass
+
+        results.append({
+            "id":         row.get("id"),
+            "address":    row.get("address"),
+            "acreage":    row.get("acreage"),
+            "created_at": row.get("created_at"),
+            "soil_ph":    soil_ph,
+            "top_crop":   top_crop,
+            "ndvi_value": row.get("ndvi_value"),
+        })
+
+    return results
 
 
 # ── Recommendations ───────────────────────────────────────────────────────────

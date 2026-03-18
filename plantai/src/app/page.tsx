@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/lib/store';
 import { geocodeAddress } from '@/lib/api/nominatim';
+import { getUserId } from '@/lib/identity';
+import { fetchMyAnalyses, type AnalysisSummary } from '@/lib/apiClient';
 
 const springTransition = { duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] };
 
@@ -16,6 +18,17 @@ export default function LandingPage() {
   const [showResults, setShowResults] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [pastAnalyses, setPastAnalyses] = useState<AnalysisSummary[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(true);
+
+  useEffect(() => {
+    const userId = getUserId();
+    if (!userId) { setLoadingHistory(false); return; }
+    fetchMyAnalyses(userId)
+      .then(setPastAnalyses)
+      .catch((err) => console.warn('Failed to load history:', err))
+      .finally(() => setLoadingHistory(false));
+  }, []);
 
   const search = useCallback(async (q: string) => {
     if (q.length < 3) { setResults([]); return; }
@@ -148,6 +161,89 @@ export default function LandingPage() {
           vegetation health, and crop intelligence for your exact property —
           before you buy a single sensor.
         </motion.p>
+
+        {/* Welcome Back — Past Analyses */}
+        {!loadingHistory && pastAnalyses.length > 0 && (
+          <motion.div
+            className="mb-8 max-w-lg"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...springTransition, delay: 0.85 }}
+          >
+            <div
+              className="text-[10px] uppercase tracking-[0.2em] mb-3"
+              style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-body)', fontWeight: 600 }}
+            >
+              Your saved farms
+            </div>
+            <div
+              className="rounded-xl overflow-hidden"
+              style={{
+                background: 'rgba(17, 22, 18, 0.95)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid var(--color-border)',
+              }}
+            >
+              {pastAnalyses.map((a, i) => (
+                <button
+                  key={a.id}
+                  onClick={() => router.push(`/analysis/${a.id}`)}
+                  className="w-full text-left px-4 py-3 transition-colors hover:bg-white/5 flex items-center gap-3"
+                  style={{
+                    borderBottom: i < pastAnalyses.length - 1 ? '1px solid var(--color-border)' : 'none',
+                  }}
+                >
+                  <svg
+                    className="w-4 h-4 shrink-0"
+                    style={{ color: 'var(--color-primary)' }}
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round"
+                      d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15" />
+                  </svg>
+                  <div className="flex-1 min-w-0">
+                    <div
+                      className="text-sm truncate"
+                      style={{ color: 'var(--color-text-primary)' }}
+                    >
+                      {a.address || 'Unnamed property'}
+                    </div>
+                    <div className="flex gap-3 mt-0.5">
+                      <span className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+                        {a.acreage} acres
+                      </span>
+                      {a.top_crop && (
+                        <span className="text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
+                          {a.top_crop}
+                        </span>
+                      )}
+                      {a.soil_ph != null && (
+                        <span className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+                          pH {a.soil_ph}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <svg
+                    className="w-4 h-4 shrink-0"
+                    style={{ color: 'var(--color-text-muted)' }}
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              ))}
+            </div>
+            <div className="mt-3 text-center">
+              <span
+                className="text-[11px]"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
+                Welcome back — or start a new analysis below
+              </span>
+            </div>
+          </motion.div>
+        )}
 
         {/* Search Input */}
         <motion.div
